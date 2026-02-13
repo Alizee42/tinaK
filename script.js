@@ -91,7 +91,7 @@ if (form) {
     }
 
     if (!services.length) {
-      openStatusModal("Information manquante", "Merci de selectionner au moins un service.", "error");
+      openStatusModal("Information manquante", "Merci de sélectionner au moins un service.", "error");
       return;
     }
 
@@ -157,15 +157,15 @@ if (form) {
       form.reset();
       closeModal();
       openStatusModal(
-        "Message envoye",
-        "Votre demande a bien ete envoyee. Merci, je vous recontacte tres vite.",
+        "Demande envoyée",
+        "Merci, votre demande a bien été reçue.\nJe vous recontacterai rapidement.",
         "success"
       );
     } catch (error) {
       const message =
         error && error.message
-          ? `L'envoi a echoue: ${error.message}`
-          : "L'envoi a echoue. Merci de reessayer dans quelques instants.";
+          ? `L'envoi a échoué : ${error.message}`
+          : "L'envoi a échoué. Merci de réessayer dans quelques instants.";
       openStatusModal("Envoi impossible", message, "error");
     } finally {
       if (submitButton) {
