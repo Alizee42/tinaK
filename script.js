@@ -133,7 +133,16 @@ if (form) {
       }
 
       if (!response.ok) {
-        throw new Error("Erreur reseau");
+        let errorMessage = "Erreur reseau";
+        try {
+          const errorPayload = await response.json();
+          if (errorPayload && errorPayload.error) {
+            errorMessage = errorPayload.error;
+          }
+        } catch (_error) {
+          // Keep default message when response body is not JSON.
+        }
+        throw new Error(errorMessage);
       }
 
       form.reset();
@@ -144,7 +153,11 @@ if (form) {
         "success"
       );
     } catch (error) {
-      openStatusModal("Envoi impossible", "L'envoi a echoue. Merci de reessayer dans quelques instants.", "error");
+      const message =
+        error && error.message
+          ? `L'envoi a echoue: ${error.message}`
+          : "L'envoi a echoue. Merci de reessayer dans quelques instants.";
+      openStatusModal("Envoi impossible", message, "error");
     } finally {
       if (submitButton) {
         submitButton.disabled = false;
