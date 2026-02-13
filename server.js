@@ -162,6 +162,7 @@ app.post("/api/contact", async (req, res) => {
 });
 
 app.get("*", (_req, res) => {
+  res.set("Content-Type", "text/html; charset=utf-8");
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
@@ -182,3 +183,4 @@ function escapeHtml(value) {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
 }
+
