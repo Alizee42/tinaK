@@ -158,7 +158,11 @@ exports.handler = async (event) => {
     return response(200, { ok: true });
   } catch (error) {
     console.error("Mail send error:", error);
-    return response(500, { error: "Echec envoi e-mail." });
+    return response(500, {
+      error: "Echec envoi e-mail.",
+      smtpCode: error && error.code ? String(error.code) : "UNKNOWN",
+      smtpMessage: error && error.message ? String(error.message) : "Unknown SMTP error"
+    });
   }
 };
 

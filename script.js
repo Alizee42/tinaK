@@ -136,8 +136,20 @@ if (form) {
         let errorMessage = "Erreur reseau";
         try {
           const errorPayload = await response.json();
-          if (errorPayload && errorPayload.error) {
-            errorMessage = errorPayload.error;
+          if (errorPayload) {
+            const parts = [];
+            if (errorPayload.error) {
+              parts.push(errorPayload.error);
+            }
+            if (errorPayload.smtpCode) {
+              parts.push(`Code: ${errorPayload.smtpCode}`);
+            }
+            if (errorPayload.smtpMessage) {
+              parts.push(errorPayload.smtpMessage);
+            }
+            if (parts.length) {
+              errorMessage = parts.join(" | ");
+            }
           }
         } catch (_error) {
           // Keep default message when response body is not JSON.
