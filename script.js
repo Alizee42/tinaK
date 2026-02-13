@@ -1,5 +1,10 @@
 ﻿const modal = document.getElementById("requestModal");
 const form = document.getElementById("requestForm");
+const statusModal = document.getElementById("statusModal");
+const statusTitle = document.getElementById("statusTitle");
+const statusText = document.getElementById("statusText");
+const statusCloseButtons = document.querySelectorAll("[data-close-status]");
+const statusIcon = statusModal ? statusModal.querySelector(".status-icon") : null;
 const openButtons = document.querySelectorAll("[data-open-request]");
 const closeButtons = document.querySelectorAll("[data-close-request]");
 
@@ -23,6 +28,36 @@ function closeModal() {
   document.body.classList.remove("modal-open");
 }
 
+function openStatusModal(title, message, type) {
+  if (!statusModal || !statusTitle || !statusText || !statusIcon) {
+    return;
+  }
+
+  statusTitle.textContent = title;
+  statusText.textContent = message;
+
+  statusModal.classList.remove("is-success", "is-error");
+  statusModal.classList.add(type === "success" ? "is-success" : "is-error");
+
+  statusIcon.textContent = type === "success" ? "✓" : "!";
+
+  statusModal.classList.add("is-open");
+  statusModal.setAttribute("aria-hidden", "false");
+}
+
+function closeStatusModal() {
+  if (!statusModal) {
+    return;
+  }
+
+  statusModal.classList.remove("is-open", "is-success", "is-error");
+  statusModal.setAttribute("aria-hidden", "true");
+}
+
+statusCloseButtons.forEach((button) => {
+  button.addEventListener("click", closeStatusModal);
+});
+
 openButtons.forEach((button) => {
   button.addEventListener("click", openModal);
 });
@@ -35,10 +70,14 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && modal && modal.classList.contains("is-open")) {
     closeModal();
   }
+
+  if (event.key === "Escape" && statusModal && statusModal.classList.contains("is-open")) {
+    closeStatusModal();
+  }
 });
 
 if (form) {
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const data = new FormData(form);
@@ -50,36 +89,67 @@ if (form) {
     const services = data.getAll("services");
 
     if (!fullName || !email) {
-      window.alert("Merci de renseigner votre nom et votre e-mail.");
+      openStatusModal("Information manquante", "Merci de renseigner votre nom et votre e-mail.", "error");
       return;
     }
 
     if (!services.length) {
-      window.alert("Merci de selectionner au moins un service.");
+      openStatusModal("Information manquante", "Merci de selectionner au moins un service.", "error");
       return;
     }
 
-    const subject = `Demande de service - ${fullName}`;
-    const bodyLines = [
-      "Bonjour Tina,",
-      "",
-      "Je souhaite faire une demande pour les services suivants :",
-      ...services.map((service) => `- ${service}`),
-      "",
-      "Mes informations :",
-      `Nom : ${fullName}`,
-      `E-mail : ${email}`,
-      `Telephone : ${phone || "Non renseigne"}`,
-      `Disponibilites : ${availability || "Non renseigne"}`,
-      "",
-      "Details :",
-      details || "Non renseigne",
-      "",
-      "Merci."
-    ];
+    const submitButton = form.querySelector(".request-submit");
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = "Envoi en cours...";
+    }
 
-    const body = bodyLines.join("\n");
-    const mailto = `mailto:Tina.k-bureau@hotmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailto;
+    try {
+      const payload = JSON.stringify({
+        fullName,
+        email,
+        phone,
+        availability,
+        services,
+        details
+      });
+      const headers = {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      };
+
+      let response = await fetch("/.netlify/functions/contact", {
+        method: "POST",
+        headers,
+        body: payload
+      });
+
+      if (!response.ok && window.location.hostname === "localhost") {
+        response = await fetch("/api/contact", {
+          method: "POST",
+          headers,
+          body: payload
+        });
+      }
+
+      if (!response.ok) {
+        throw new Error("Erreur reseau");
+      }
+
+      form.reset();
+      closeModal();
+      openStatusModal(
+        "Message envoye",
+        "Votre demande a bien ete envoyee. Merci, je vous recontacte tres vite.",
+        "success"
+      );
+    } catch (error) {
+      openStatusModal("Envoi impossible", "L'envoi a echoue. Merci de reessayer dans quelques instants.", "error");
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = "Envoyer ma demande";
+      }
+    }
   });
 }

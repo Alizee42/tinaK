@@ -347,6 +347,17 @@
     </div>
   </div>
 
+  <div class="status-modal" id="statusModal" aria-hidden="true">
+    <div class="status-backdrop" data-close-status></div>
+    <div class="status-panel" role="dialog" aria-modal="true" aria-labelledby="statusTitle">
+      <button type="button" class="status-close" aria-label="Fermer" data-close-status>×</button>
+      <div class="status-icon" aria-hidden="true">✓</div>
+      <h3 id="statusTitle" class="status-title"></h3>
+      <p class="status-text" id="statusText"></p>
+      <button type="button" class="btn status-btn" data-close-status>Fermer</button>
+    </div>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
