@@ -4,7 +4,6 @@ const statusModal = document.getElementById("statusModal");
 const statusTitle = document.getElementById("statusTitle");
 const statusText = document.getElementById("statusText");
 const statusCloseButtons = document.querySelectorAll("[data-close-status]");
-const statusIcon = statusModal ? statusModal.querySelector(".status-icon") : null;
 const openButtons = document.querySelectorAll("[data-open-request]");
 const closeButtons = document.querySelectorAll("[data-close-request]");
 
@@ -29,7 +28,7 @@ function closeModal() {
 }
 
 function openStatusModal(title, message, type) {
-  if (!statusModal || !statusTitle || !statusText || !statusIcon) {
+  if (!statusModal || !statusTitle || !statusText) {
     return;
   }
 
@@ -38,8 +37,6 @@ function openStatusModal(title, message, type) {
 
   statusModal.classList.remove("is-success", "is-error");
   statusModal.classList.add(type === "success" ? "is-success" : "is-error");
-
-  statusIcon.textContent = type === "success" ? "✓" : "!";
 
   statusModal.classList.add("is-open");
   statusModal.setAttribute("aria-hidden", "false");

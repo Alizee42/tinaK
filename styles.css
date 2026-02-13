@@ -150,7 +150,7 @@ p {
 .hero-grid {
   display: grid;
   gap: 1.5rem;
-  grid-template-columns: 1.28fr 0.72fr;
+  grid-template-columns: 1.42fr 0.58fr;
   align-items: center;
   padding-top: 1.6rem;
 }
@@ -175,7 +175,6 @@ p {
 
 .hero-text {
   color: var(--muted);
-  max-width: 58ch;
 }
 
 .hero-cta {
@@ -208,6 +207,8 @@ p {
 }
 
 .hero-photo {
+  width: min(100%, 320px);
+  justify-self: end;
   padding: 0.5rem;
 }
 
@@ -215,6 +216,7 @@ p {
   display: block;
   width: 100%;
   aspect-ratio: 4 / 5;
+  max-height: 420px;
   object-fit: cover;
   border-radius: 14px;
 }
@@ -912,16 +914,6 @@ p {
   cursor: pointer;
 }
 
-.status-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
-  font-weight: 800;
-  margin-bottom: 0.8rem;
-}
-
 .status-title {
   margin: 0 0 0.32rem;
   font-family: "Cormorant Garamond", serif;
@@ -940,20 +932,8 @@ p {
   margin-top: 1rem;
 }
 
-.status-modal.is-success .status-icon {
-  background: #eaf8ed;
-  color: #2f7c3e;
-  border: 1px solid #c8e7d1;
-}
-
 .status-modal.is-success .status-title {
   color: #294a2f;
-}
-
-.status-modal.is-error .status-icon {
-  background: #fff1f1;
-  color: #a33e3e;
-  border: 1px solid #f2cccc;
 }
 
 .status-modal.is-error .status-title {
@@ -964,6 +944,27 @@ p {
   .hero-grid,
   .contact-shell {
     grid-template-columns: 1fr;
+  }
+
+  .hero-photo {
+    width: min(100%, 300px);
+    margin: 0 auto;
+    justify-self: center;
+  }
+
+  .hero-content {
+    text-align: center;
+    max-width: 70ch;
+    margin: 0 auto;
+  }
+
+  .hero-text {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-cta {
+    justify-content: center;
   }
 
   .hero-content h1,
@@ -1015,6 +1016,14 @@ p {
     padding-bottom: 3rem;
   }
 
+  .hero-content {
+    text-align: center;
+  }
+
+  .hero-points {
+    justify-items: center;
+  }
+
   .nav {
     border-radius: 14px;
     padding: 0.42rem 0.45rem 0.42rem 0.6rem;
@@ -1043,6 +1052,15 @@ p {
 
   .service-panel-head p {
     font-size: 0.9rem;
+  }
+
+  .hero-photo {
+    width: min(100%, 280px);
+    margin: 0 auto;
+  }
+
+  .hero-photo img {
+    aspect-ratio: 3 / 4;
   }
 
   .form-grid,
@@ -1106,6 +1124,11 @@ p {
   .contact-side,
   .service-panel {
     padding: 1rem;
+  }
+
+  .hero-photo {
+    width: min(100%, 240px);
+    padding: 0.35rem;
   }
 
   .top-arrow,
